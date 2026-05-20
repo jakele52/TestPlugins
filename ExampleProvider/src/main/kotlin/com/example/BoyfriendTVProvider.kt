@@ -2,58 +2,46 @@ package com.example
 
 import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.utils.ExtractorLink
-import org.jsoup.nodes.Element
+import com.lagradost.cloudstream3.utils.Qualities
+import org.jsoup.Jsoup
 
 class BoyfriendTVProvider : MainAPI() {
     override var mainUrl = "https://www.boyfriendtv.com"
     override var name = "BoyfriendTV"
     override val supportedTypes = setOf(TvType.Adult)
-    override var lang = "en"
-    override val hasMainPage = true
 
-    // 1. Tạo Trang Chủ (Home Page) với các danh mục: Trending, New, Top Rated
+    override var hasMainPage = true
+
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse? {
-        val items = mutableListOf<HomePageList>()
-        val urls = listOf(
-            Pair("Trending", "$mainUrl/trending/page$page.html"),
-            Pair("Newest", "$mainUrl/newest/page$page.html"),
-            Pair("Top Rated", "$mainUrl/top-rated/page$page.html")
-        )
-        
-        for ((title, url) in urls) {
-            val document = app.get(url).document
-            // Tìm khối chứa danh sách video dựa trên class/id HTML của BoyfriendTV
-            val videoElements = document.select("div.video-item") 
-            val homeResults = videoElements.mapNotNull { it.toSearchResult() }
-            if (homeResults.isNotEmpty()) {
-                items.add(HomePageList(title, homeResults))
+        val document = Jsoup.connect(mainUrl).get()
+        val home = document.select(".video-item").mapNotNull {
+            val title = it.selectFirst(".title")?.text() ?: return@mapNotNull null
+            val href = it.selectFirst("a")?.attr("href") ?: return@mapNotNull null
+            val poster = it.selectFirst("img")?.attr("data-src") ?: it.selectFirst("img")?.attr("src")
+            
+            newMovieSearchResponse(title, fixUrl(href), TvType.Adult) {
+                this.posterUrl = fixUrlNull(poster)
             }
         }
-        return HomePageResponse(items, hasNext = true)
+        return newHomePageResponse(listOf(HomePageList("Recent Videos", home)), false)
     }
 
-    // Hàm phụ chuyển đổi thẻ HTML sang định dạng Search Result của CloudStream
-    private fun Element.toSearchResult(): SearchResponse? {
-        val title = this.selectFirst("a.video-title")?.text() ?: return null
-        val href = this.selectFirst("a.video-title")?.attr("href") ?: return null
-        val posterUrl = this.selectFirst("img")?.attr("src")
-        
-        return newMovieSearchResponse(title, fixUrl(href), TvType.Adult) {
-            this.posterUrl = fixUrlNull(posterUrl)
+    override suspend fun search(query: String): List<SearchResponse> {
+        val document = Jsoup.connect("$mainUrl/search/videos/?search_query=$query").get()
+        return document.select(".video-item").mapNotNull {
+            val title = it.selectFirst(".title")?.text() ?: return@mapNotNull null
+            val href = it.selectFirst("a")?.attr("href") ?: return@mapNotNull null
+            val poster = it.selectFirst("img")?.attr("data-src") ?: it.selectFirst("img")?.attr("src")
+
+            newMovieSearchResponse(title, fixUrl(href), TvType.Adult) {
+                this.posterUrl = fixUrlNull(poster)
+            }
         }
     }
 
-    // 2. Tìm kiếm (Search)
-    override suspend fun search(query: String): List<SearchResponse> {
-        val searchUrl = "$mainUrl/search/videos/?q=$query"
-        val document = app.get(searchUrl).document
-        return document.select("div.video-item").mapNotNull { it.toSearchResult() }
-    }
-
-    // 3. Chi Tiết Video (Load nội dung trang xem phim)
     override suspend fun load(url: String): LoadResponse? {
-        val document = app.get(url).document
-        val title = document.selectFirst("h1.watch-video-title")?.text() ?: "BoyfriendTV Video"
+        val document = Jsoup.connect(url).get()
+        val title = document.selectFirst("h1")?.text() ?: return null
         val poster = document.selectFirst("video")?.attr("poster")
 
         return newMovieLoadResponse(title, url, TvType.Adult, url) {
@@ -61,26 +49,23 @@ class BoyfriendTVProvider : MainAPI() {
         }
     }
 
-    // 4. Lấy Link Stream (.mp4 hoặc m3u8) để chạy trong Player
     override suspend fun loadLinks(
         data: String,
         isCasting: Boolean,
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit
     ): Boolean {
-        val document = app.get(data).document
-        
-        // Trích xuất link video từ thẻ <source> trong thẻ <video>
-        val videoUrl = document.selectFirst("video source")?.attr("src")
-        
-        if (!videoUrl.isNullOrEmpty()) {
-            callback.invoke(
+        val document = Jsoup.connect(data).get()
+        val source = document.selectFirst("video source")?.attr("src")
+
+        if (!source.isNullOrEmpty()) {
+            callback(
                 ExtractorLink(
-                    name = "BoyfriendTV Direct",
-                    source = "BoyfriendTV",
-                    url = fixUrl(videoUrl),
-                    referer = mainUrl,
-                    quality = Qualities.Unknown.value // Hoặc tự bóc tách độ phân giải nếu có
+                    name = this.name,
+                    source = this.name,
+                    url = fixUrl(source),
+                    referer = data,
+                    quality = Qualities.P720.value
                 )
             )
             return true
