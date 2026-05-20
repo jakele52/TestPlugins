@@ -8,7 +8,7 @@ import org.jsoup.Jsoup
 class BoyfriendTVProvider : MainAPI() {
     override var mainUrl = "https://www.boyfriendtv.com"
     override var name = "BoyfriendTV"
-    override val supportedTypes = setOf(TvType.Adult)
+    override val supportedTypes = setOf(TvType.NSFW)
 
     override var hasMainPage = true
 
@@ -19,7 +19,7 @@ class BoyfriendTVProvider : MainAPI() {
             val href = it.selectFirst("a")?.attr("href") ?: return@mapNotNull null
             val poster = it.selectFirst("img")?.attr("data-src") ?: it.selectFirst("img")?.attr("src")
             
-            newMovieSearchResponse(title, fixUrl(href), TvType.Adult) {
+            newMovieSearchResponse(title, fixUrl(href), TvType.NSFW) {
                 this.posterUrl = fixUrlNull(poster)
             }
         }
@@ -33,7 +33,7 @@ class BoyfriendTVProvider : MainAPI() {
             val href = it.selectFirst("a")?.attr("href") ?: return@mapNotNull null
             val poster = it.selectFirst("img")?.attr("data-src") ?: it.selectFirst("img")?.attr("src")
 
-            newMovieSearchResponse(title, fixUrl(href), TvType.Adult) {
+            newMovieSearchResponse(title, fixUrl(href), TvType.NSFW) {
                 this.posterUrl = fixUrlNull(poster)
             }
         }
@@ -44,7 +44,7 @@ class BoyfriendTVProvider : MainAPI() {
         val title = document.selectFirst("h1")?.text() ?: return null
         val poster = document.selectFirst("video")?.attr("poster")
 
-        return newMovieLoadResponse(title, url, TvType.Adult, url) {
+        return newMovieLoadResponse(title, url, TvType.NSFW, url) {
             this.posterUrl = fixUrlNull(poster)
         }
     }
