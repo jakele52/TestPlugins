@@ -73,7 +73,8 @@ class BoyfriendTVProvider : MainAPI() {
                 newExtractorLink(
                     name = "${this.name} 720p",
                     source = this.name,
-                    url = fixUrl(source)
+                    url = fixUrl(source),
+                    referer = data // CHÍNH XÁC LÀ DÒNG NÀY: Gửi kèm Link gốc để vượt qua bộ lọc bảo mật của Server
                 )
             )
             return true
