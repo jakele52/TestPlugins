@@ -1,0 +1,16 @@
+[
+    {
+        "fileHash": "sha256-6b887c2f49c9261487e19d778f1c7047e8e6aa92603ad4503f0cff542e3e7ae5",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/jakele52/TestPlugins",
+        "fileSize": 7149,
+        "status": 3,
+        "authors": [
+            
+        ],
+        "version": -1,
+        "internalName": "ExampleProvider",
+        "url": "https://raw.githubusercontent.com/jakele52/TestPlugins/builds/ExampleProvider.cs3",
+        "name": "ExampleProvider"
+    }
+]
