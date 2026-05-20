@@ -3,30 +3,29 @@ dependencies {
     implementation("androidx.recyclerview:recyclerview:1.3.2")
 }
 
-// Use an integer for version numbers
+// Số phiên bản của Plugin (Tăng số này lên nếu bạn cập nhật code sau này)
 version = 1
 
 cloudstream {
-    // All of these properties are optional, you can safely remove any of them.
-
-    description = "Lorem ipsum"
-    authors = listOf("Cloudburst", "Luna712")
+    description = "Provider for BoyfriendTV"
+    authors = listOf("Jakele52")
 
     /**
-    * Status int as one of the following:
-    * 0: Down
-    * 1: Ok
-    * 2: Slow
+    * Trạng thái nguồn:
+    * 0: Down (Lỗi/Sập)
+    * 1: Ok (Hoạt động tốt)
+    * 2: Slow (Chậm)
     * 3: Beta-only
     **/
-    status = 1 // Will be 3 if unspecified
+    status = 1 
 
-    tvTypes = listOf("Movie")
+    // SỬA TẠI ĐÂY: Đổi sang "Adult" để khớp với TvType.Adult trong file BoyfriendTVProvider.kt
+    tvTypes = listOf("Adult")
 
     requiresResources = true
     language = "en"
 
-    // Random CC logo I found
+    // Icon hiển thị của Plugin trong app CloudStream
     iconUrl = "https://upload.wikimedia.org/wikipedia/commons/2/2f/Korduene_Logo.png"
 }
 
