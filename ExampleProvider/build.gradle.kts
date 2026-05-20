@@ -1,11 +1,9 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-// Dùng apply thay cho plugins {} để tương thích hoàn toàn với buildscript của file root
 apply(plugin = "com.android.library")
 apply(plugin = "kotlin-android")
 apply(plugin = "com.lagradost.cloudstream3.gradle")
 
-// CHỐNG LỖI CÚ PHÁP: Gọi trực tiếp qua Class Java để Gradle không bao giờ bị lỗi Unresolved reference
 extensions.getByType(com.lagradost.cloudstream3.gradle.CloudstreamExtension::class.java).apply {
     setRepo(System.getenv("GITHUB_REPOSITORY") ?: "jakele52/TestPlugins")
 }
@@ -20,14 +18,14 @@ extensions.getByType(com.android.build.gradle.BaseExtension::class.java).apply {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 }
 
 tasks.withType(KotlinCompile::class.java).configureEach {
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
         freeCompilerArgs = freeCompilerArgs + listOf(
             "-Xno-call-assertions",
             "-Xno-param-assertions",
@@ -38,7 +36,6 @@ tasks.withType(KotlinCompile::class.java).configureEach {
 }
 
 dependencies {
-    // CHỐNG LỖI KHỞI TẠO TRỄ: Dùng hàm add() thuần thay vì gọi dạng Chuỗi toán tử ("implementation"())
     add("cloudstream", "com.lagradost:cloudstream3:pre-release")
     add("implementation", kotlin("stdlib"))
     add("implementation", "com.github.Blatzar:NiceHttp:0.4.11")

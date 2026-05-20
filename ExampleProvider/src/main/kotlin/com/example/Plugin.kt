@@ -1,9 +1,19 @@
 package com.example
 
+import android.content.Context
 import com.lagradost.cloudstream3.*
+import com.lagradost.cloudstream3.plugins.CloudstreamPlugin
+import com.lagradost.cloudstream3.plugins.Plugin
 import com.lagradost.cloudstream3.utils.ExtractorLink
-import com.lagradost.cloudstream3.utils.Qualities
+import com.lagradost.cloudstream3.utils.newExtractorLink
 import org.jsoup.Jsoup
+
+@CloudstreamPlugin
+class PluginEntry: Plugin() {
+    override fun load(context: Context) {
+        registerMainAPI(BoyfriendTVProvider())
+    }
+}
 
 class BoyfriendTVProvider : MainAPI() {
     override var mainUrl = "https://www.boyfriendtv.com"
@@ -12,7 +22,6 @@ class BoyfriendTVProvider : MainAPI() {
 
     override var hasMainPage = true
 
-    // SỬA TẠI ĐÂY: Trả về HomePageResponse? đúng chuẩn quy định của Core Cloudstream API
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse? {
         val document = Jsoup.connect(mainUrl).get()
         val home = document.select(".video-item").mapNotNull {
@@ -24,7 +33,6 @@ class BoyfriendTVProvider : MainAPI() {
                 this.posterUrl = fixUrlNull(poster)
             }
         }
-        // Đóng gói danh sách Video vào phương thức sinh Response tự động
         return newHomePageResponse(listOf(HomePageList("Recent Videos", home)), false)
     }
 
@@ -62,12 +70,10 @@ class BoyfriendTVProvider : MainAPI() {
 
         if (!source.isNullOrEmpty()) {
             callback(
-                ExtractorLink(
-                    name = this.name,
+                newExtractorLink(
+                    name = "${this.name} 720p",
                     source = this.name,
-                    url = fixUrl(source),
-                    referer = data,
-                    quality = Qualities.P720.value
+                    url = fixUrl(source)
                 )
             )
             return true
