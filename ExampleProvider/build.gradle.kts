@@ -1,20 +1,16 @@
-import com.android.build.gradle.BaseExtension
-import com.lagradost.cloudstream3.gradle.CloudstreamExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-plugins {
-    id("com.android.library")
-    id("kotlin-android")
-    id("com.lagradost.cloudstream3.gradle")
-}
+// Dùng apply thay cho plugins {} để tương thích hoàn toàn với buildscript của file root
+apply(plugin = "com.android.library")
+apply(plugin = "kotlin-android")
+apply(plugin = "com.lagradost.cloudstream3.gradle")
 
-// SỬA: Thêm "extensions." để định danh chính xác phạm vi cấu hình của Cloudstream
-extensions.configure<CloudstreamExtension> {
+// CHỐNG LỖI CÚ PHÁP: Gọi trực tiếp qua Class Java để Gradle không bao giờ bị lỗi Unresolved reference
+extensions.getByType(com.lagradost.cloudstream3.gradle.CloudstreamExtension::class.java).apply {
     setRepo(System.getenv("GITHUB_REPOSITORY") ?: "jakele52/TestPlugins")
 }
 
-// SỬA: Thêm "extensions." để định danh chính xác phạm vi cấu hình của Android SDK
-extensions.configure<BaseExtension> {
+extensions.getByType(com.android.build.gradle.BaseExtension::class.java).apply {
     namespace = "com.example"
     compileSdkVersion(35)
 
@@ -29,7 +25,7 @@ extensions.configure<BaseExtension> {
     }
 }
 
-tasks.withType<KotlinCompile>().configureEach {
+tasks.withType(KotlinCompile::class.java).configureEach {
     kotlinOptions {
         jvmTarget = "1.8"
         freeCompilerArgs = freeCompilerArgs + listOf(
@@ -42,10 +38,10 @@ tasks.withType<KotlinCompile>().configureEach {
 }
 
 dependencies {
-    // SỬA: Sử dụng chuỗi định danh cấu hình gốc (String literal invocation) để tránh lỗi khởi tạo trễ
-    "cloudstream"("com.lagradost:cloudstream3:pre-release")
-    "implementation"(kotlin("stdlib"))
-    "implementation"("com.github.Blatzar:NiceHttp:0.4.11")
-    "implementation"("org.jsoup:jsoup:1.18.3")
-    "implementation"("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.1")
+    // CHỐNG LỖI KHỞI TẠO TRỄ: Dùng hàm add() thuần thay vì gọi dạng Chuỗi toán tử ("implementation"())
+    add("cloudstream", "com.lagradost:cloudstream3:pre-release")
+    add("implementation", kotlin("stdlib"))
+    add("implementation", "com.github.Blatzar:NiceHttp:0.4.11")
+    add("implementation", "org.jsoup:jsoup:1.18.3")
+    add("implementation", "com.fasterxml.jackson.module:jackson-module-kotlin:2.13.1")
 }
