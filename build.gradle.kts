@@ -13,7 +13,6 @@ buildscript {
     dependencies {
         classpath("com.android.tools.build:gradle:8.7.3")
         classpath("com.github.recloudstream:gradle:-SNAPSHOT")
-        // ĐỒNG BỘ: Nâng cấp plugin Kotlin lên 2.1.0 để khớp hoàn toàn với siêu dữ liệu (metadata) của Cloudstream Core
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.0")
     }
 }
@@ -35,7 +34,6 @@ subprojects {
     apply(plugin = "kotlin-android")
     apply(plugin = "com.lagradost.cloudstream3.gradle")
 
-    // Ép toàn bộ các dependency liên quan đến Kotlin sử dụng chung phiên bản ổn định 2.1.0
     configurations.all {
         resolutionStrategy.eachDependency {
             if (requested.group == "org.jetbrains.kotlin") {
@@ -65,12 +63,13 @@ subprojects {
         tasks.withType<KotlinJvmCompile> {
             compilerOptions {
                 jvmTarget.set(JvmTarget.JVM_1_8)
-                freeCompilerArgs.addAll(
+                // SỬA TẠI ĐÂY: Dùng .set(listOf(...)) để truyền danh sách tham số đúng cú pháp Gradle Kotlin DSL
+                freeCompilerArgs.set(listOf(
                     "-Xno-call-assertions",
                     "-Xno-param-assertions",
                     "-Xno-receiver-assertions",
                     "-Xskip-metadata-version-check"
-                )
+                ))
             }
         }
     }
