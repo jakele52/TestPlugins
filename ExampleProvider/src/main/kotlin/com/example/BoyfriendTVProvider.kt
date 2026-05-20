@@ -12,8 +12,8 @@ class BoyfriendTVProvider : MainAPI() {
 
     override var hasMainPage = true
 
-    // SỬA: Cập nhật đúng kiểu trả về List<HomePageList> thay vì HomePageResponse?
-    override suspend fun getMainPage(page: Int, request: MainPageRequest): List<HomePageList>? {
+    // SỬA TẠI ĐÂY: Trả về HomePageResponse? đúng chuẩn quy định của Core Cloudstream API
+    override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse? {
         val document = Jsoup.connect(mainUrl).get()
         val home = document.select(".video-item").mapNotNull {
             val title = it.selectFirst(".title")?.text() ?: return@mapNotNull null
@@ -24,7 +24,8 @@ class BoyfriendTVProvider : MainAPI() {
                 this.posterUrl = fixUrlNull(poster)
             }
         }
-        return listOf(HomePageList("Recent Videos", home))
+        // Đóng gói danh sách Video vào phương thức sinh Response tự động
+        return newHomePageResponse(listOf(HomePageList("Recent Videos", home)), false)
     }
 
     override suspend fun search(query: String): List<SearchResponse> {
@@ -40,7 +41,6 @@ class BoyfriendTVProvider : MainAPI() {
         }
     }
 
-    // SỬA: Sử dụng đúng kiểu cấu trúc nạp dữ liệu chuẩn (LoadResponse?) của Cloudstream API mới
     override suspend fun load(url: String): LoadResponse? {
         val document = Jsoup.connect(url).get()
         val title = document.selectFirst("h1")?.text() ?: return null
