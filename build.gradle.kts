@@ -15,7 +15,9 @@ buildscript {
         classpath("com.android.tools.build:gradle:8.7.3")
         // Cloudstream gradle plugin which makes everything work and builds plugins
         classpath("com.github.recloudstream:gradle:-SNAPSHOT")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.0")
+        
+        // SỬA TẠI ĐÂY: Nâng cấp Kotlin plugin lên 2.3.0 để khớp với metadata của cloudstream.jar
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.3.0")
     }
 }
 
@@ -61,7 +63,9 @@ subprojects {
                 freeCompilerArgs.addAll(
                     "-Xno-call-assertions",
                     "-Xno-param-assertions",
-                    "-Xno-receiver-assertions"
+                    "-Xno-receiver-assertions",
+                    // SỬA TẠI ĐÂY: Thêm flag bỏ qua kiểm tra phiên bản metadata nếu có lệch pha nhỏ giữa các module
+                    "-Xskip-metadata-version-check"
                 )
             }
         }
