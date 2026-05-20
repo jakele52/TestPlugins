@@ -13,7 +13,7 @@ buildscript {
     dependencies {
         classpath("com.android.tools.build:gradle:8.7.3")
         classpath("com.github.recloudstream:gradle:-SNAPSHOT")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.0")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.3.0")
     }
 }
 
@@ -37,7 +37,7 @@ subprojects {
     configurations.all {
         resolutionStrategy.eachDependency {
             if (requested.group == "org.jetbrains.kotlin") {
-                useVersion("2.1.0")
+                useVersion("2.3.0")
             }
         }
     }
