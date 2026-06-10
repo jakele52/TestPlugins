@@ -74,13 +74,12 @@ subprojects {
         // Stubs for all Cloudstream classes
         apk("com.lagradost:cloudstream3:pre-release")
 
-        // these dependencies can include any of those which are added by the app,
-        // but you dont need to include any of them if you dont need them
-        // https://github.com/recloudstream/cloudstream/blob/master/app/build.gradle
-        implementation(kotlin("stdlib")) // adds standard kotlin features, like listOf, mapOf etc
-        implementation("com.github.Blatzar:NiceHttp:0.3.2") // http library
-        implementation("org.jsoup:jsoup:1.13.1") // html parser
-        implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.1")
+        // những dependency này có thể bao gồm bất kỳ cái nào được app thêm vào,
+        // nhưng bạn không cần thêm tất cả nếu không dùng đến
+        implementation(kotlin("stdlib")) 
+        implementation("com.github.Blatzar:NiceHttp:0.4.11") // Cập nhật lên bản ổn định mới nhất
+        implementation("org.jsoup:jsoup:1.15.3") // Cập nhật jsoup
+        implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.14.1")
         implementation("io.karn:khttp-android:0.1.2")
     }
 }
