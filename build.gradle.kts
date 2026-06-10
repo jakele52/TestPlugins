@@ -12,7 +12,7 @@ buildscript {
     dependencies {
         classpath("com.android.tools.build:gradle:7.0.4")
         // Cloudstream gradle plugin which makes everything work and builds plugins
-        classpath("com.github.recloudstream:gradle:master-SNAPSHOT")
+        classpath("com.github.recloudstream:gradle:81b1d424d2")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.10")
     }
 }
@@ -36,7 +36,7 @@ subprojects {
 
     cloudstream {
         // when running through github workflow, GITHUB_REPOSITORY should contain current repository name
-        setRepo("cloudstream", "cs3xxx-repo", "codeberg")
+        setRepo("https://github.com/jakele52/TestPlugins")
 
         description = "For the coomers and degenerates"
         authors = listOf("Jace")
@@ -68,7 +68,7 @@ subprojects {
     }
 
     dependencies {
-        val apk by configurations
+        val apk by configurations.creating
         val implementation by configurations
 
         // Stubs for all Cloudstream classes
