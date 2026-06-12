@@ -69,16 +69,15 @@ subprojects {
 
     dependencies {
         val apk by configurations.creating
-        configurations.getByName("compileOnly").extendsFrom(apk)
-
         // Stubs for all Cloudstream classes
         // apk("com.lagradost:cloudstream3:pre-release") // Broken on JitPack
-        add("compileOnly", "com.github.recloudstream.cloudstream:library:-SNAPSHOT")
+
+        add("compileOnly", "com.github.recloudstream.cloudstream:library:v4.7.0")
+        add("compileOnly", kotlin("stdlib")) 
 
         // những dependency này có thể bao gồm bất kỳ cái nào được app thêm vào,
         // nhưng bạn không cần thêm tất cả nếu không dùng đến
-        add("implementation", kotlin("stdlib")) 
-        add("implementation", "com.github.Blatzar:NiceHttp:0.4.18")
+        add("implementation", "com.github.Blatzar:NiceHttp:0.4.11")
         add("implementation", "org.jsoup:jsoup:1.15.3") 
         add("implementation", "com.fasterxml.jackson.module:jackson-module-kotlin:2.14.1")
         add("implementation", "io.karn:khttp-android:0.1.2")
