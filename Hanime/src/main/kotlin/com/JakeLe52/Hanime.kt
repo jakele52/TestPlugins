@@ -15,6 +15,14 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
+private fun okhttp3.Headers.toMap(): Map<String, String> {
+    val map = mutableMapOf<String, String>()
+    for (i in 0 until this.size) {
+        map[this.name(i)] = this.value(i)
+    }
+    return map
+}
+
 //Credits https://github.com/ArjixWasTaken/CloudStream-3/blob/master/app/src/main/java/com/ArjixWasTaken/cloudstream3/animeproviders/HanimeProvider.kt
 
 class Hanime : MainAPI() {

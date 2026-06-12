@@ -77,9 +77,9 @@ subprojects {
         // những dependency này có thể bao gồm bất kỳ cái nào được app thêm vào,
         // nhưng bạn không cần thêm tất cả nếu không dùng đến
         implementation(kotlin("stdlib")) 
-        implementation("com.github.Blatzar:NiceHttp:0.4.11") // Cập nhật lên bản ổn định mới nhất
-        implementation("org.jsoup:jsoup:1.15.3") // Cập nhật jsoup
-        implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.14.1")
+        implementation("com.github.Blatzar:NiceHttp:0.4.11")
+        implementation("org.jsoup:jsoup:1.13.1") 
+        implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.1")
         implementation("io.karn:khttp-android:0.1.2")
     }
 }

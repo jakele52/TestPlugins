@@ -6,6 +6,14 @@ import com.lagradost.cloudstream3.mvvm.logError
 import com.lagradost.cloudstream3.utils.*
 import com.lagradost.cloudstream3.utils.AppUtils.toJson
 
+private fun okhttp3.Headers.toMap(): Map<String, String> {
+    val map = mutableMapOf<String, String>()
+    for (i in 0 until this.size) {
+        map[this.name(i)] = this.value(i)
+    }
+    return map
+}
+
 
 class XvideosProvider : MainAPI() {
     private val globalTvType = TvType.NSFW

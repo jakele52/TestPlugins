@@ -8,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.lagradost.cloudstream3.mvvm.logError
 import java.text.SimpleDateFormat
 import java.util.*
-import khttp.structures.cookie.CookieJar
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 
@@ -16,9 +15,6 @@ import org.jsoup.nodes.Document
 
 class Hahomoe : MainAPI() {
     companion object {
-        var token: String? = null
-        var cookie: CookieJar? = null
-
         fun getType(t: String): TvType {
             return TvType.NSFW
             /*
@@ -33,18 +29,6 @@ class Hahomoe : MainAPI() {
     override val hasQuickSearch = false
     override val hasMainPage = true
     override val supportedTypes = setOf(TvType.NSFW)
-
-    private fun loadToken(): Boolean {
-        return try {
-            val response = khttp.get(mainUrl)
-            cookie = response.cookies
-            val document = Jsoup.parse(response.text)
-            token = document.selectFirst("""meta[name="csrf-token"]""")?.attr("content")
-            token != null
-        } catch (e: Exception) {
-            false
-        }
-    }
 
     override suspend fun getMainPage(
         page: Int,

@@ -8,6 +8,14 @@ import com.lagradost.cloudstream3.network.WebViewResolver
 import com.lagradost.cloudstream3.utils.*
 import org.jsoup.nodes.Element
 
+private fun okhttp3.Headers.toMap(): Map<String, String> {
+    val map = mutableMapOf<String, String>()
+    for (i in 0 until this.size) {
+        map[this.name(i)] = this.value(i)
+    }
+    return map
+}
+
 class Pornhub : MainAPI() {
     private val globalTvType = TvType.NSFW
 
