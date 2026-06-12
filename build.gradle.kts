@@ -72,7 +72,7 @@ subprojects {
         configurations.getByName("compileOnly").extendsFrom(apk)
 
         // Stubs for all Cloudstream classes
-        apk("com.lagradost:cloudstream3:pre-release")
+        // apk("com.lagradost:cloudstream3:pre-release") // Broken on JitPack
         add("compileOnly", "com.github.recloudstream.cloudstream:library:-SNAPSHOT")
 
         // những dependency này có thể bao gồm bất kỳ cái nào được app thêm vào,
