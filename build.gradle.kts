@@ -69,18 +69,19 @@ subprojects {
 
     dependencies {
         val apk by configurations.creating
-        val implementation by configurations
+        configurations.getByName("compileOnly").extendsFrom(apk)
 
         // Stubs for all Cloudstream classes
         apk("com.lagradost:cloudstream3:pre-release")
+        add("compileOnly", "com.github.recloudstream.cloudstream:library:-SNAPSHOT")
 
         // những dependency này có thể bao gồm bất kỳ cái nào được app thêm vào,
         // nhưng bạn không cần thêm tất cả nếu không dùng đến
-        implementation(kotlin("stdlib")) 
-        implementation("com.github.Blatzar:NiceHttp:0.4.11")
-        implementation("org.jsoup:jsoup:1.13.1") 
-        implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.1")
-        implementation("io.karn:khttp-android:0.1.2")
+        add("implementation", kotlin("stdlib")) 
+        add("implementation", "com.github.Blatzar:NiceHttp:0.4.18")
+        add("implementation", "org.jsoup:jsoup:1.15.3") 
+        add("implementation", "com.fasterxml.jackson.module:jackson-module-kotlin:2.14.1")
+        add("implementation", "io.karn:khttp-android:0.1.2")
     }
 }
 
